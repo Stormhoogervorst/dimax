@@ -1,58 +1,16 @@
 import Image from "next/image";
-import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 
 import { Button } from "@/components/ui/Button";
-import { Container } from "@/components/ui/Container";
-
-type NavItem = { label: string; href: string };
-
-const NAV_ITEMS: NavItem[] = [
-  { label: "Over ons", href: "/over-ons" },
-  { label: "Tarieven", href: "/tarieven" },
-  { label: "Reviews", href: "/reviews" },
-  { label: "Voorwaarden", href: "/voorwaarden" },
-];
+import { Header } from "@/components/layout/Header";
 
 export function Hero() {
   return (
     <section className="relative overflow-visible bg-brand-primary">
-      {/* ============ HEADER BAR (full-width, boven de columns) ============ */}
-      <Container className="flex items-center justify-between gap-6 py-6">
-        <Link
-          href="/"
-          className="font-display text-2xl font-medium tracking-tight text-text-on-dark"
-          aria-label="Dimax — terug naar home"
-        >
-          Dimax
-          <sup className="ml-0.5 align-super text-[10px] font-normal text-text-on-dark-muted">
-            ®
-          </sup>
-        </Link>
-
-        <nav
-          aria-label="Hoofdnavigatie"
-          className="hidden items-center gap-8 md:flex"
-        >
-          {NAV_ITEMS.map((item) => (
-            <Link
-              key={item.href}
-              href={item.href}
-              className="whitespace-nowrap text-[15px] text-text-on-dark/85 transition-colors hover:text-text-on-dark"
-            >
-              {item.label}
-            </Link>
-          ))}
-        </nav>
-
-        <Button
-          href="/boeken"
-          variant="accentPill"
-          className="hidden md:inline-flex"
-        >
-          Boek nu je rit
-        </Button>
-      </Container>
+      {/* ============ HEADER BAR ============
+          Gebruikt de gemeenschappelijke Header component (variant onDark).
+          Bevat ook de hamburger menu toggle voor mobile. */}
+      <Header variant="onDark" />
 
       {/* ============ BODY ============
           - Eigen wrapper i.p.v. Container: rechter-padding is 24px (i.p.v. 48px)

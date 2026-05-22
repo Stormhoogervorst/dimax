@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Menu, X } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 import { Container } from "@/components/ui/Container";
@@ -30,12 +30,24 @@ export function Header({
   variant = "onLight",
   overlay = false,
 }: HeaderProps) {
-  const [open, setOpen] = useState(false);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const isDark = variant === "onDark";
 
+  useEffect(() => {
+    if (isMenuOpen) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "unset";
+    }
+
+    return () => {
+      document.body.style.overflow = "unset";
+    };
+  }, [isMenuOpen]);
+
   const wrapperClasses = cn(
-    "z-50 w-full",
+    "z-40 w-full",
     overlay ? "absolute inset-x-0 top-0" : "relative",
   );
 
@@ -51,94 +63,113 @@ export function Header({
       : "text-text-secondary hover:text-text-primary",
   );
 
-  const menuButtonClasses = cn(
-    "inline-flex h-11 w-11 items-center justify-center rounded-pill border transition-colors md:hidden",
+  const hamburgerClasses = cn(
+    "inline-flex items-center justify-center md:hidden transition-colors",
     isDark
-      ? "border-white/30 text-text-on-dark hover:bg-white/10"
-      : "border-border-default text-text-primary hover:bg-brand-accent-muted",
+      ? "text-text-on-dark hover:text-text-on-dark/80"
+      : "text-text-primary hover:text-text-secondary",
   );
 
   return (
-    <header className={wrapperClasses}>
-      <Container className="flex h-20 items-center justify-between md:h-24">
-        <Link href="/" className={logoClasses} aria-label="Dimax — terug naar home">
-          Dimax
-        </Link>
-
-        <nav
-          aria-label="Hoofdnavigatie"
-          className="hidden items-center gap-10 md:flex"
-        >
-          {NAV_ITEMS.map((item) => (
-            <Link key={item.href} href={item.href} className={navLinkClasses}>
-              {item.label}
-            </Link>
-          ))}
-        </nav>
-
-        <div className="flex items-center gap-3">
-          <Button
-            href="/boeken"
-            variant={isDark ? "accentPill" : "primaryPill"}
-            className="hidden md:inline-flex"
+    <>
+      <header className={wrapperClasses}>
+        <Container className="flex h-20 items-center justify-between md:h-24">
+          <Link
+            href="/"
+            className={logoClasses}
+            aria-label="Dimax — terug naar home"
           >
-            Boek nu
-          </Button>
+            Dimax
+          </Link>
+
+          <nav
+            aria-label="Hoofdnavigatie"
+            className="hidden items-center gap-10 md:flex"
+          >
+            {NAV_ITEMS.map((item) => (
+              <Link key={item.href} href={item.href} className={navLinkClasses}>
+                {item.label}
+              </Link>
+            ))}
+          </nav>
+
+          <div className="hidden md:block">
+            <Button
+              href="/boeken"
+              variant={isDark ? "accentPill" : "primaryPill"}
+            >
+              Boek nu
+            </Button>
+          </div>
 
           <button
             type="button"
-            onClick={() => setOpen((v) => !v)}
-            className={menuButtonClasses}
-            aria-expanded={open}
+            onClick={() => setIsMenuOpen(true)}
+            className={hamburgerClasses}
+            aria-expanded={isMenuOpen}
             aria-controls="mobile-menu"
-            aria-label={open ? "Menu sluiten" : "Menu openen"}
+            aria-label="Menu openen"
           >
-            {open ? (
-              <X className="h-5 w-5" aria-hidden="true" />
-            ) : (
-              <Menu className="h-5 w-5" aria-hidden="true" />
-            )}
+            <Menu size={28} aria-hidden="true" />
           </button>
-        </div>
-      </Container>
+        </Container>
+      </header>
 
-      {open && (
+      {isMenuOpen && (
         <div
           id="mobile-menu"
-          className={cn(
-            "md:hidden",
-            isDark
-              ? "bg-brand-primary-deep/95 backdrop-blur"
-              : "bg-surface-cream/95 backdrop-blur border-t border-border-subtle",
-          )}
+          role="dialog"
+          aria-modal="true"
+          aria-label="Mobiel menu"
+          className="fixed inset-0 z-50 flex flex-col bg-brand-primary px-5 py-8 md:hidden"
         >
-          <Container className="flex flex-col gap-1 py-4">
+          <div className="flex items-center justify-between">
+            <Link
+              href="/"
+              onClick={() => setIsMenuOpen(false)}
+              className="font-display text-2xl font-medium tracking-tight text-text-on-dark"
+              aria-label="Dimax — terug naar home"
+            >
+              Dimax
+            </Link>
+
+            <button
+              type="button"
+              onClick={() => setIsMenuOpen(false)}
+              className="inline-flex items-center justify-center text-text-on-dark transition-colors hover:text-text-on-dark/80"
+              aria-label="Menu sluiten"
+            >
+              <X size={28} aria-hidden="true" />
+            </button>
+          </div>
+
+          <nav
+            aria-label="Mobiele hoofdnavigatie"
+            className="flex flex-1 flex-col items-center justify-center gap-8"
+          >
             {NAV_ITEMS.map((item) => (
               <Link
                 key={item.href}
                 href={item.href}
-                onClick={() => setOpen(false)}
-                className={cn(
-                  "rounded-md px-3 py-3 text-base transition-colors",
-                  isDark
-                    ? "text-text-on-dark hover:bg-white/10"
-                    : "text-text-primary hover:bg-brand-accent-muted",
-                )}
+                onClick={() => setIsMenuOpen(false)}
+                className="font-display text-2xl font-medium text-text-on-dark"
               >
                 {item.label}
               </Link>
             ))}
+
             <Button
               href="/boeken"
-              variant={isDark ? "accentPill" : "primaryPill"}
-              className="mt-3 w-full"
-              onClick={() => setOpen(false)}
+              variant="accentPill"
+              size="lg"
+              className="mt-4"
+              onClick={() => setIsMenuOpen(false)}
             >
-              Boek nu
+              Boek nu je rit
             </Button>
-          </Container>
+          </nav>
         </div>
       )}
-    </header>
+    </>
   );
 }
