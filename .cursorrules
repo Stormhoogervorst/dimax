@@ -1,0 +1,289 @@
+# Dimax — Cursor Rules
+
+Je werkt aan de website van **Dimax Management Assistence**, een chauffeursdienst.
+Volg deze regels bij ELKE code-suggestie. Geen uitzonderingen zonder expliciete toestemming.
+
+---
+
+## PROJECT CONTEXT
+
+- **Bedrijf:** Dimax — chauffeursdienst, rijdt klanten in hun eigen auto (95% van de ritten)
+- **Doelgroep:** 30-99 jaar, vermogend genoeg voor chauffeur, géén tech-savvy publiek
+- **USP:** Lagere prijzen dan concurrenten + vriendelijke studentchauffeurs
+- **Doel website:** Informeren + boekingen genereren (geen offerte-aanvragen, directe boeking)
+- **Tone of voice:** Professioneel, betrouwbaar, warm. Niet jong/hip/casual.
+- **Stack:** Next.js 14+ (App Router), TypeScript, Tailwind CSS, MDX voor content
+
+---
+
+## DESIGN SYSTEM — STRIKT VOLGEN
+
+Het volledige design systeem staat in `DESIGN.md`. Belangrijkste regels:
+
+### Kleuren — gebruik ALTIJD CSS variabelen, NOOIT hardcoded hex
+
+```css
+/* Brand */
+--color-brand-primary: #0B2545;        /* hero, footer, donkere CTA, headings */
+--color-brand-primary-deep: #081A33;   /* hover op donkere knoppen */
+--color-brand-primary-mid: #13315C;    /* borders op donker, dividers */
+--color-brand-accent: #8DA9C4;         /* lichtblauw, pills, cards op donker */
+--color-brand-accent-soft: #D9E2EC;    /* zachte accent vlakken */
+--color-brand-accent-muted: #EEF2F7;   /* hover accent, subtiele highlights */
+
+/* Surface */
+--color-surface-cream: #F7F5EE;        /* hoofd-canvas lichte secties */
+--color-surface-white: #FFFFFF;        /* feature cards op accent */
+--color-surface-off-white: #FAFAF7;    /* gestapelde lichte vlakken */
+
+/* Text */
+--color-text-primary: #0B2545;         /* headings + body op licht */
+--color-text-secondary: #3A5275;       /* body op licht */
+--color-text-muted: #6B7B95;           /* eyebrows, captions */
+--color-text-on-dark: #FFFFFF;
+--color-text-on-dark-muted: #B8C5D6;
+--color-text-on-accent: #0B2545;       /* tekst op accent vlakken */
+
+/* Border */
+--color-border-subtle: #E4E7EB;
+--color-border-default: #C9D2DD;
+--color-border-on-dark: #1F3B66;
+
+/* Semantic */
+--color-rating: #0B2545;               /* sterren zijn DONKERBLAUW, niet goud */
+--color-success: #2A6F4E;
+--color-error: #B23A48;
+```
+
+### Verboden — NOOIT gebruiken
+
+- ❌ Felle kleuren (rood, geel, knal-blauw, neon)
+- ❌ Comic Sans of andere "rare" lettertypes
+- ❌ Pure zwart (`#000`) — gebruik `--color-brand-primary` voor donkere tekst/vlakken
+- ❌ Koel grijs als surface — altijd warme cream
+- ❌ Gradient-knoppen — buttons zijn altijd flat color
+- ❌ Heldere accent als groot achtergrondvlak — accent is voor pills/cards/kleine elementen
+- ❌ Goud/gele sterren in reviews — sterren zijn `--color-rating` (donkerblauw)
+- ❌ Hardcoded kleuren in components — altijd via CSS variabelen of Tailwind config
+
+### Typografie
+
+- **Display font:** `'Inter Display', 'Inter', sans-serif`
+- **Body font:** `'Inter', sans-serif`
+- **Font weight headings:** ALTIJD `500` (medium), NOOIT bold (700+). Dit is bewust voor "rustige autoriteit".
+- **Eyebrows:** NIET uppercase, gewoon sentence case
+- **Display XL:** `clamp(56px, 7vw, 96px)`, line-height 1.02, tracking -0.03em
+- **Display L:** `clamp(40px, 5vw, 64px)`, line-height 1.05, tracking -0.025em
+
+### Spacing
+
+- Section vertical desktop: `128px` (8rem)
+- Section vertical mobile: `64px` (4rem)
+- Container max-width: `1280px`
+- Container padding desktop: `48px`
+- Container padding mobile: `20px`
+- Card padding: `32px` standaard, `40px` voor large
+
+### Border radii
+
+- Buttons: `12px` (of `9999px` pill voor hero/header CTA)
+- Cards: `20px` standaard, `28px` voor grote cards (pricing, review, hero overlay)
+- Inputs: `12px`
+- Avatars: `9999px` (pill)
+- **Grote radii zijn bewust** — voelen vriendelijker voor de doelgroep 30-99
+
+### Schaduwen
+
+Gebruik blauwe basis (geen zwart): `rgba(11, 37, 69, X)`
+
+- xs: `0 1px 2px rgba(11, 37, 69, 0.04)`
+- sm: `0 2px 8px rgba(11, 37, 69, 0.06)`
+- md: `0 8px 24px rgba(11, 37, 69, 0.08)`
+- lg: `0 20px 48px rgba(11, 37, 69, 0.12)`
+
+### Motion
+
+- Easings: `cubic-bezier(0.4, 0, 0.2, 1)` standaard
+- Durations: `150ms` fast, `250ms` base, `400ms` slow
+- Subtiele hover: `translateY(-1px)` op cards, background transitions op buttons
+- **GEEN flashy animaties** — past niet bij doelgroep
+
+---
+
+## COMPONENT REGELS
+
+### Button varianten (exact volgen, niet uitvinden)
+
+1. **primary** — donkerblauwe bg, witte tekst, radius 12px
+2. **primaryPill** — zelfde maar radius 9999px (header/hero CTA)
+3. **accentPill** — lichtblauwe bg, donkerblauwe tekst, pill (signature button op donkere achtergrond)
+4. **ghost** — transparant met border, donkerblauwe tekst (secundair in lichte secties)
+5. **ghostOnDark** — transparant met witte border, witte tekst (secundair in hero)
+6. **phonePill** — speciale combinatie-pill: label-zijde gevuld + nummer-zijde transparant met outline
+
+### Card varianten
+
+1. **feature** — wit, gebruikt op accent achtergrond, icoon-wrapper in accent-soft
+2. **pricing** — accent achtergrond, ghost CTA's behalve primaire optie
+3. **review** — accent achtergrond, donkerblauwe sterren
+4. **infoOverlay** — wit met large shadow, floats op hero-foto
+
+### Section varianten
+
+1. **darkHero** — primary bg, witte tekst, min-height 100vh
+2. **lightHero** — cream bg
+3. **darkStats** — primary bg met overlay gradient over foto
+4. **accentBlock** — gradient cream → accent-muted
+5. **darkFeature** — primary bg met accent headings, large radius, met margin (niet full-width)
+
+---
+
+## NEXT.JS / CODE CONVENTIES
+
+### Architectuur
+
+- **App Router** (geen Pages Router)
+- **Server Components by default** — alleen `'use client'` als interactie nodig is (forms, state, hover effects met state)
+- **TypeScript strict mode**
+- **Geen runtime database** — content komt uit MDX files in `content/`
+
+### Folder structuur
+
+```
+app/
+  layout.tsx              # Root layout + metadata
+  page.tsx                # Homepage
+  tarieven/page.tsx
+  over-ons/page.tsx
+  voorwaarden/page.tsx
+  boeken/page.tsx         # Booking flow
+  sitemap.ts
+  robots.ts
+components/
+  ui/                     # Atomic components (Button, Card, Input)
+  sections/               # Page sections (Hero, PricingGrid, ReviewsBlock)
+  layout/                 # Header, Footer
+content/
+  blog/                   # MDX blogposts (later)
+  pages/                  # MDX page content (over-ons, voorwaarden)
+lib/
+  utils.ts
+  metadata.ts             # SEO helpers
+styles/
+  globals.css             # CSS variables + Tailwind base
+public/
+  images/
+```
+
+### Tailwind config
+
+Gebruik Tailwind voor layout/spacing, maar map design tokens naar Tailwind config. Custom kleuren worden `bg-brand-primary`, `text-on-dark`, etc. Geen `bg-[#0B2545]` in componenten.
+
+### Naamgeving
+
+- Componenten: `PascalCase.tsx`
+- Helpers: `camelCase.ts`
+- Pages: lowercase folder + `page.tsx`
+- URL slugs: kebab-case, Nederlands (`/over-ons`, niet `/about-us`)
+
+---
+
+## SEO REGELS — kritiek, NIET overslaan
+
+### Per pagina ALTIJD:
+
+```tsx
+import type { Metadata } from 'next'
+
+export const metadata: Metadata = {
+  title: 'Pagina naam',  // template in layout vult ' | Dimax' aan
+  description: 'Max 155 tekens, beschrijft pagina + bevat keyword',
+  alternates: { canonical: '/path' },
+  openGraph: {
+    title: 'Pagina naam',
+    description: '...',
+    url: '/path',
+    type: 'website',
+  },
+}
+```
+
+### Root layout metadata
+
+```tsx
+export const metadata: Metadata = {
+  metadataBase: new URL('https://dimax.nl'),
+  title: {
+    default: 'Dimax — Chauffeursdienst | Van A naar B zonder zelf te rijden',
+    template: '%s | Dimax',
+  },
+  description: '...',
+  openGraph: {
+    siteName: 'Dimax',
+    locale: 'nl_NL',
+    type: 'website',
+  },
+}
+```
+
+### Verplicht aanwezig
+
+- `app/sitemap.ts` — dynamic sitemap
+- `app/robots.ts` — robots config
+- Structured data (JSON-LD) op homepage: `LocalBusiness` schema met type `TaxiService`
+- `lang="nl"` op `<html>` tag
+- Heading hiërarchie: één `<h1>` per pagina, daarna `<h2>`, `<h3>` in volgorde
+- Alle `<img>` met `alt` (decoratief = `alt=""`, betekenisvol = beschrijvend)
+- Internal links met betekenisvolle ankertekst (niet "klik hier")
+
+### URL conventies
+
+- Nederlands en kebab-case: `/over-ons`, `/tarieven`, `/voorwaarden`, `/boeken`
+- Geen trailing slashes
+- Eenmaal gekozen URL = nooit meer wijzigen (anders 301 redirects nodig)
+
+---
+
+## CONTENT REGELS
+
+### Pakkende slogans gebruiken
+
+Klant wil pakkende slogans. Voorbeeld: "Van A naar B zonder zelf te rijden!"
+Bouw structuur waar slogans prominent ingezet kunnen worden in hero en CTA-blokken.
+
+### Beeldmateriaal
+
+- Foto's van de weg / vogelvlucht over de weg (klant heeft deze stijl genoemd)
+- Geen stockfoto's van forensen of zakenmensen — past niet bij doelgroep
+- Foto van auto + chauffeur > foto van alleen auto
+
+### Booking flow content
+
+Klant wil dat klanten direct kunnen boeken (geen offerte). MVP boekingsflow vraagt:
+- Startlocatie + tijd
+- Eventuele tussenstops
+- Eindlocatie
+- Eigen auto of auto regelen
+- Opmerkingen / aanvullende informatie
+
+Boekingsvenster: max 3 maanden vooruit, minimaal 1 week van tevoren.
+
+---
+
+## WAT TE DOEN BIJ TWIJFEL
+
+1. **Onduidelijk welke kleur?** → Check `DESIGN.md` of vraag het.
+2. **Component bestaat al?** → Hergebruik, maak GEEN duplicaat.
+3. **Nieuwe kleur nodig?** → STOP. Vraag of het echt nodig is. Bijna altijd is het antwoord nee.
+4. **Verleiding tot animatie?** → Eerst checken of het past bij "rustige autoriteit". Bij twijfel: weglaten.
+5. **Snelle hack of nette oplossing?** → Nette oplossing. Deze site moet schaalbaar zijn.
+
+---
+
+## OUTPUT FORMAT
+
+- Schrijf in TypeScript, met types voor props
+- Korte, leesbare componenten (>200 regels = splits op)
+- Comments alleen waar de WHY niet duidelijk is uit de code
+- Geen `console.log` in productie code
+- Tailwind class volgorde: layout → spacing → typography → color → state
