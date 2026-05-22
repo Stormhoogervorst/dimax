@@ -67,7 +67,8 @@ export function HowItWorks() {
 
         {/* ============ BOTTOM: stappen ============ */}
         <div className="mt-12 md:mt-20">
-          {/* Scheidingslijn met accent-markeringen — alleen desktop */}
+          {/* Scheidingslijn met accent-markeringen — horizontaal BOVEN de stappen
+              op desktop, alleen op md+ zichtbaar. */}
           <div
             aria-hidden="true"
             className="relative hidden md:block"
@@ -82,9 +83,21 @@ export function HowItWorks() {
             </div>
           </div>
 
-          <ol className="mt-8 grid grid-cols-1 gap-10 md:mt-10 md:grid-cols-3 md:gap-8">
+          {/* pl-6 op mobile maakt ruimte voor de verticale lijn + accent-markers
+              links van de stappen. Op md+ vervalt deze padding. */}
+          <ol className="relative mt-8 grid grid-cols-1 gap-10 pl-6 md:mt-10 md:grid-cols-3 md:gap-8 md:pl-0">
+            {/* Scheidingslijn — verticaal LINKS van de stappen op mobile */}
+            <div
+              aria-hidden="true"
+              className="absolute inset-y-0 left-0 w-px bg-text-on-dark-muted/30 md:hidden"
+            />
             {STEPS.map((step) => (
-              <li key={step.n}>
+              <li key={step.n} className="relative">
+                {/* Mobile: accent-vierkant op de verticale lijn, bovenaan elke stap */}
+                <div
+                  aria-hidden="true"
+                  className="absolute -left-7 top-0 h-2 w-2 bg-brand-accent md:hidden"
+                />
                 <span
                   aria-hidden="true"
                   className="font-display text-display-l font-medium leading-none text-text-on-dark"
