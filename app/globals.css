@@ -1,26 +1,191 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+/* ============================================
+   DIMAX DESIGN TOKENS — Tailwind v4
+   Alle design system waarden uit DESIGN.md
+   ============================================ */
+
+@theme {
+  /* === BRAND COLORS === */
+  --color-brand-primary: #0B2545;
+  --color-brand-primary-deep: #081A33;
+  --color-brand-primary-mid: #13315C;
+  --color-brand-accent: #8DA9C4;
+  --color-brand-accent-soft: #D9E2EC;
+  --color-brand-accent-muted: #EEF2F7;
+
+  /* === SURFACE === */
+  --color-surface-cream: #F7F5EE;
+  --color-surface-white: #FFFFFF;
+  --color-surface-off-white: #FAFAF7;
+
+  /* === TEXT === */
+  --color-text-primary: #0B2545;
+  --color-text-secondary: #3A5275;
+  --color-text-muted: #6B7B95;
+  --color-text-on-dark: #FFFFFF;
+  --color-text-on-dark-muted: #B8C5D6;
+  --color-text-on-accent: #0B2545;
+
+  /* === BORDER === */
+  --color-border-subtle: #E4E7EB;
+  --color-border-default: #C9D2DD;
+  --color-border-on-dark: #1F3B66;
+
+  /* === SEMANTIC === */
+  --color-rating: #0B2545;
+  --color-success: #2A6F4E;
+  --color-error: #B23A48;
+
+  /* === FONTS === */
+  --font-display: "Inter Display", "Inter", -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-sans: "Inter", -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-serif: "Instrument Serif", Georgia, serif;
+
+  /* === FONT SIZES (clamp voor responsive display) === */
+  --text-display-xl: clamp(56px, 7vw, 96px);
+  --text-display-xl--line-height: 1.02;
+  --text-display-xl--letter-spacing: -0.03em;
+
+  --text-display-l: clamp(40px, 5vw, 64px);
+  --text-display-l--line-height: 1.05;
+  --text-display-l--letter-spacing: -0.025em;
+
+  --text-display-m: clamp(32px, 3.5vw, 44px);
+  --text-display-m--line-height: 1.1;
+  --text-display-m--letter-spacing: -0.02em;
+
+  --text-h1: 40px;
+  --text-h1--line-height: 1.15;
+  --text-h1--letter-spacing: -0.02em;
+
+  --text-h2: 32px;
+  --text-h2--line-height: 1.2;
+  --text-h2--letter-spacing: -0.015em;
+
+  --text-h3: 24px;
+  --text-h3--line-height: 1.3;
+  --text-h3--letter-spacing: -0.01em;
+
+  --text-h4: 20px;
+  --text-h4--line-height: 1.35;
+  --text-h4--letter-spacing: -0.005em;
+
+  --text-body-l: 18px;
+  --text-body-l--line-height: 1.55;
+
+  --text-body-m: 16px;
+  --text-body-m--line-height: 1.6;
+
+  --text-body-s: 14px;
+  --text-body-s--line-height: 1.5;
+
+  --text-eyebrow: 14px;
+  --text-eyebrow--line-height: 1.4;
+  --text-eyebrow--letter-spacing: 0.02em;
+
+  --text-caption: 13px;
+  --text-caption--line-height: 1.4;
+
+  /* === BORDER RADIUS === */
+  --radius-none: 0px;
+  --radius-sm: 6px;
+  --radius-md: 12px;
+  --radius-lg: 20px;
+  --radius-xl: 28px;
+  --radius-pill: 9999px;
+
+  /* Semantic radius aliases */
+  --radius-button: 12px;
+  --radius-card: 20px;
+  --radius-card-lg: 28px;
+  --radius-input: 12px;
+
+  /* === SHADOWS (blauwe basis, geen zwart) === */
+  --shadow-xs: 0 1px 2px rgba(11, 37, 69, 0.04);
+  --shadow-sm: 0 2px 8px rgba(11, 37, 69, 0.06);
+  --shadow-md: 0 8px 24px rgba(11, 37, 69, 0.08);
+  --shadow-lg: 0 20px 48px rgba(11, 37, 69, 0.12);
+
+  /* === MOTION === */
+  --ease-standard: cubic-bezier(0.4, 0, 0.2, 1);
+  --ease-decelerate: cubic-bezier(0, 0, 0.2, 1);
+  --ease-accelerate: cubic-bezier(0.4, 0, 1, 1);
+
+  /* === BREAKPOINTS (Tailwind v4 reads these) === */
+  --breakpoint-sm: 640px;
+  --breakpoint-md: 768px;
+  --breakpoint-lg: 1024px;
+  --breakpoint-xl: 1280px;
+  --breakpoint-2xl: 1440px;
+
+  /* === CONTAINER === */
+  --container-max: 1280px;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
+/* ============================================
+   BASE STYLES
+   ============================================ */
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+html {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-sans);
+  font-size: var(--text-body-m);
+  line-height: var(--text-body-m--line-height);
+  color: var(--color-text-primary);
+  background: var(--color-surface-cream);
+}
+
+/* Headings — altijd medium weight (500), nooit bold */
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-display);
+  font-weight: 500;
+  color: var(--color-text-primary);
+}
+
+/* Selectie kleur */
+::selection {
+  background: var(--color-brand-accent);
+  color: var(--color-text-on-accent);
+}
+
+/* Focus ring — toegankelijk maar passend bij merk */
+*:focus-visible {
+  outline: 2px solid var(--color-brand-primary);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* ============================================
+   UTILITY CLASSES — voor patronen die vaak terugkomen
+   ============================================ */
+
+/* Container met max-width en padding */
+.container-dimax {
+  width: 100%;
+  max-width: var(--container-max);
+  margin-inline: auto;
+  padding-inline: 20px;
+}
+
+@media (min-width: 768px) {
+  .container-dimax {
+    padding-inline: 48px;
+  }
+}
+
+/* Section padding */
+.section-py {
+  padding-block: 64px;
+}
+
+@media (min-width: 1024px) {
+  .section-py {
+    padding-block: 128px;
+  }
 }
