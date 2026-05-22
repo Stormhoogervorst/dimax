@@ -125,6 +125,13 @@
 
 /* ============================================
    BASE STYLES
+   ----------------------------------------------
+   Bewust GEEN globale heading-kleur of font-family meer:
+   elke heading krijgt in JSX expliciet `font-display font-medium` plus
+   een `text-*` utility (text-text-primary / text-text-on-dark / ...).
+   Een globale heading-kleur conflicteerde met Tailwind v4 + Turbopack:
+   in de dev-build viel die regel buiten @layer base en won daardoor van
+   utility classes. Door 'm hier weg te halen wint de utility altijd.
    ============================================ */
 
 html {
@@ -141,20 +148,11 @@ body {
   background: var(--color-surface-cream);
 }
 
-/* Headings — altijd medium weight (500), nooit bold */
-h1, h2, h3, h4, h5, h6 {
-  font-family: var(--font-display);
-  font-weight: 500;
-  color: var(--color-text-primary);
-}
-
-/* Selectie kleur */
 ::selection {
   background: var(--color-brand-accent);
   color: var(--color-text-on-accent);
 }
 
-/* Focus ring — toegankelijk maar passend bij merk */
 *:focus-visible {
   outline: 2px solid var(--color-brand-primary);
   outline-offset: 2px;
